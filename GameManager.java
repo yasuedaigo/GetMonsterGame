@@ -98,12 +98,25 @@ public class GameManager {
     }
 
     /*
-     * ランダムでモンスターを選択する
+     * 発生率に応じたモンスターを選択する
      * @return 選択されたモンスター
      */
     private Monster choiceMonster() {
-        int randomInt = random.nextInt(monsters.size());
-        return monsters.get(randomInt);
+        int totalRate = 0;
+        //すべてのモンスターの発生率の合計を計算する
+        for (Monster monster : monsters) {
+            totalRate += monster.getEncountRate();
+        }
+        int randomRate = random.nextInt(totalRate);
+        int currentRate = 0;
+        //ランダムで選択された発生率の合計が現在の合計発生率より小さい場合、そのモンスターを返す
+        for (Monster monster : monsters) {
+            currentRate += monster.getEncountRate();
+            if (randomRate < currentRate) {
+                return monster;
+            }
+        }
+        return null;
     }
 
     /*
